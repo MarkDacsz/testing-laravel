@@ -17,7 +17,12 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/', function () {
-    $posts = Post::all();
+    $posts = [];
+    // $posts = Post::where('user_id', auth()->id())->get();
+    if(auth()->check()){
+     $posts = auth()->user()->posts()->get();
+    }
+
     return view('home', ['posts' => $posts]);
 });
 
@@ -28,3 +33,7 @@ Route::post('/login', [UserController::class, 'login']);
 
 //blog post route
 Route::post('/create-post', [PostController::class, 'createPost']);
+Route::get('/edit-post/{post}', [PostController::class, 'showEditForm']);
+Route::put('/edit-post/{post}', [PostController::class, 'editPost']);
+Route::delete('/delete-post/{post}', [PostController::class, 'deletePost']);
+
